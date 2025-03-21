@@ -44,6 +44,9 @@ $(TEST_TARGET).sna: $(EXAMPLE_DIR)/FapTest.asm player
 	mkdir -p $(BUILD_DIR)
 	rasm -d -v -ss -sb -sa -void -twe -xr -eo $(EXAMPLE_DIR)/FapTest.asm $(TEST_TARGET)
 
+emu: $(TEST_TARGET).sna
+	bndbuild --direct emu -- --emulator ace --snapshot $^ run
+	
 clean:
 	rm -rf $(BUILD_DIR) $(PLAYER_TARGET) $(CRUNCHER_TARGET) $(RELEASE_TARGET) *.sna
 
