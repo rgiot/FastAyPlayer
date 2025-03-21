@@ -1,17 +1,23 @@
 #define _CRT_SECURE_NO_WARNINGS
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <cstring>
 #include "FapCrunch.h"
 #include "YmData.h"
 #include "Lzss.h"
 
+FapData::~FapData() {
+	for (int i=0; i<NR_FAP_REGISTERS; ++i) {
+		if (crunchSize[i]){
+			delete[] this->crunchData[i];
+		}
+	}
+}
 
-void CrunchSong(YmData& ymData,
-	uint8_t* crunchData[NR_FAP_REGISTERS],
-	int crunchSize[NR_FAP_REGISTERS],
-	int loopOffset[NR_FAP_REGISTERS])
-{
+
+FapData::FapData(YmData& ymData): crunchData{0}, crunchSize{0}, loopOffset{0} {
+	
 	int rLoop[NR_FAP_REGISTERS] = { 0 };
 	Lzss cruncher(256, 31);
 
@@ -66,11 +72,8 @@ void CrunchSong(YmData& ymData,
 	}
 }
 
-bool WriteFile(char* fileName,
+bool FapData::WriteFile(char* fileName,
 	YmData& ymData,
-	uint8_t* crunchData[NR_FAP_REGISTERS],
-	int crunchSize[NR_FAP_REGISTERS],
-	int loopOffset[NR_FAP_REGISTERS],
 	uint8_t registersToPlay)
 
 {

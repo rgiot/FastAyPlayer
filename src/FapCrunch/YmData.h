@@ -1,6 +1,7 @@
 #pragma once
 
 #include "YmLoad.h"
+#include<optional>
 
 #define NR_YM_REGISTERS 14
 
@@ -39,4 +40,6 @@ private:
 
 	uint8_t* pRegisters[NR_YM_REGISTERS];
 	uint8_t initValues[NR_YM_REGISTERS];
+
+	YmLoad YmFile; //just to own the data
 };

@@ -3,6 +3,10 @@
 
 #include "Lzss.h"
 
+Lzss::~Lzss() {
+	delete[] dstData;
+}
+
 Lzss::Lzss(int _windowSize, int _litMaxSize)
 {
 	windowSize = _windowSize;
@@ -151,7 +155,7 @@ int Lzss::Crunch(bool loopStart)
 		bool match = FindLongestMatch(matchDistance, matchLen, pos + literalLen);
 
 		//
-		// Make sure that 2 following tokens decrunch at least X values - TODO: code plus utile ? Pas nécessaire d'adapter minDecrunchRatio ?
+		// Make sure that 2 following tokens decrunch at least X values - TODO: code plus utile ? Pas nï¿½cessaire d'adapter minDecrunchRatio ?
 		//
 		if (match)
 		{

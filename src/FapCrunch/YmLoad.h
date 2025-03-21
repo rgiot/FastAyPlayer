@@ -24,10 +24,12 @@ enum
 class YmLoad
 {
 public:
+	~YmLoad();
 	bool load(const char* fileName);
 	int GetNbFrame()		const { return nbFrame; }
 	int GetLoopFrame()		const { return loopFrame; }
 	const uint8_t* GetDataStream()		const { return pDataStream; }
+	uint8_t* TakeDataStream() { auto s=pDataStream; pDataStream = nullptr; return s;}
 	const char* GetLastError() { return pLastError; }
 
 private:

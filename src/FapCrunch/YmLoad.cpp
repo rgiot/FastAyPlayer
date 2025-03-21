@@ -62,6 +62,10 @@ char* ReadNtString(char** ptr)
 //
 ///////////////////////////////////////////////////////////////////////////////////
 
+YmLoad::~YmLoad() {
+	free(pBigMalloc);
+}
+
 bool YmLoad::load(const char* fileName)
 {
 	FILE* in = fopen(fileName, "rb");
@@ -96,7 +100,7 @@ bool YmLoad::load(const char* fileName)
 	fclose(in);
 
 	//---------------------------------------------------
-	// Lecture des donn‚es YM:
+	// Lecture des donnï¿½es YM:
 	//---------------------------------------------------
 	if (!ymDecode())
 	{

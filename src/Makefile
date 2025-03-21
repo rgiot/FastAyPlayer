@@ -28,7 +28,7 @@ test: $(TEST_TARGET).sna
 # Build rules
 #
 $(CRUNCHER_TARGET): FapCrunch/*.cpp FapCrunch/*.h
-	g++ -std=c++11 FapCrunch/*.cpp -o $(CRUNCHER_TARGET)
+	g++ $(CXXFLAGS) -std=c++17 FapCrunch/*.cpp -o $(CRUNCHER_TARGET)
 
 $(PLAYER_TARGET): $(PLAYER_DIR)/Fap*.asm
 	mkdir -p $(BUILD_DIR)
@@ -46,7 +46,7 @@ $(TEST_TARGET).sna: $(EXAMPLE_DIR)/FapTest.asm player
 
 emu: $(TEST_TARGET).sna
 	bndbuild --direct emu -- --emulator ace --snapshot $^ run
-	
+
 clean:
 	rm -rf $(BUILD_DIR) $(PLAYER_TARGET) $(CRUNCHER_TARGET) $(RELEASE_TARGET) *.sna
 

@@ -467,8 +467,6 @@ uint8_t YmData::CountAndLimitRegChanges(float Threshold)
 
 bool YmData::LoadFile(const char* FileName)
 {
-	YmLoad YmFile;
-
 	//
 	// Read the Ym file and print some informations.
 	//
@@ -477,12 +475,11 @@ bool YmData::LoadFile(const char* FileName)
 		return false;
 	}
 
-	//
 	// Extract registers from the raw buffer.
 	//
 	nbFrames = YmFile.GetNbFrame();
 	loopFrame = YmFile.GetLoopFrame();
-	const uint8_t* pData = YmFile.GetDataStream();
+	const uint8_t* pData = YmFile.TakeDataStream();
 	for (int r = 0; r < NR_YM_REGISTERS; r++)
 	{
 		pRegisters[r] = (uint8_t*)&pData[r * nbFrames];

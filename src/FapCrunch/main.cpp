@@ -63,18 +63,14 @@ int main(int argc, char* argv[])
 
 	ymData.Optimize();
 	uint8_t nrRegistersToPlay = ymData.CountAndLimitRegChanges(threshold);
-
-	uint8_t* crunchData[NR_FAP_REGISTERS] = { 0 };
-	int crunchSize[NR_FAP_REGISTERS] = { 0 };
-	int loopOffset[NR_FAP_REGISTERS] = { 0 };
-
-	CrunchSong(ymData, crunchData, crunchSize, loopOffset);
+ 
+	FapData fapData(ymData);
 
 	printf("\nSummary:\n");
 	printf("  - Max registers to program: %d\n", nrRegistersToPlay);
 	printf("  - Constant Register 12: %s\n", ymData.R12IsConst() ? "YES" : "NO... Damn your musician!");
 
-	bool success = WriteFile(dstFile, ymData, crunchData, crunchSize, loopOffset, nrRegistersToPlay);
+	bool success = fapData.WriteFile(dstFile, ymData, nrRegistersToPlay);
 	if (!success)
 	{
 		printf("Error while write result file\n");
