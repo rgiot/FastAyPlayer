@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "FapCrunch.h"
 #include <cstring>
+
+#include "Fap.h"
 
 
 
@@ -19,8 +20,7 @@ void PrintUsageAndExit()
 
 int main(int argc, char* argv[])
 {
-	float threshold = 0;
-	YmData ymData;
+	FapConfig config;
 
 	if (argc < 3 || argc > 4)
 	{
@@ -36,15 +36,15 @@ int main(int argc, char* argv[])
 		switch (argv[3][1])
 		{
 		case '1':
-			threshold = 0.005f;
+			config.threshold = 0.005f;
 			break;
 
 		case '2':
-			threshold = 0.01f;
+			config.threshold = 0.01f;
 			break;
 
 		case '3':
-			threshold = 0.015f;
+			config.threshold = 0.015f;
 			break;
 
 		default:
@@ -52,44 +52,29 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	char* srcFile = argv[1];
-	char* dstFile = argv[2];
+	config.srcFile = argv[1];
+	config.dstFile = argv[2];
 
-	if (!ymData.LoadFile(srcFile))
-	{
-		printf("Cannot load file %s\n", srcFile);
+	Fap fap = config.instantiate();
+	FapResult res = fap.handle();
+
+	if (res.code == FapResultCode::CannotLoadInputFile) {
+		printf("Cannot load file %s\n", config.srcFile);
 		return -1;
 	}
+	
+	if (config.print) {printf("%s", res.payload.repr().c_str());}
 
-	ymData.Optimize();
-	uint8_t nrRegistersToPlay = ymData.CountAndLimitRegChanges(threshold);
- 
-	FapData fapData(ymData);
 
-	printf("\nSummary:\n");
-	printf("  - Max registers to program: %d\n", nrRegistersToPlay);
-	printf("  - Constant Register 12: %s\n", ymData.R12IsConst() ? "YES" : "NO... Damn your musician!");
-
-	bool success = fapData.WriteFile(dstFile, ymData, nrRegistersToPlay);
-	if (!success)
-	{
+	else if (res.code != FapResultCode::Ok) {
 		printf("Error while write result file\n");
 		abort();
 	}
 
-	if (ymData.R12IsConst())
-	{
-		int exeTime[] = { 592, 616, 640, 664 };
-		printf("  - Play time: %d NOPS\n", exeTime[nrRegistersToPlay - 11]);
-		printf("  - Decrunch buffer size: 3144 (#B42)\n");
-	}
-	else
-	{
-		int exeTime[] = { 660, 684, 708, 732 };
 
-		printf("  - Play time: %d NOPS\n", exeTime[nrRegistersToPlay - 11]);
-		printf("  - Decrunch buffer size: 2888 (#C48)\n");
-	}
+
+
+
 
 	return 0;
 }

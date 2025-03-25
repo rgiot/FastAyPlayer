@@ -8,6 +8,9 @@ BUILD_DIR = Build
 PLAYER_DIR = FapPlayer
 EXAMPLE_DIR = Example
 
+
+MKBUILD:=$(shell mkdir -p $(BUILD_DIR))
+
 #
 # Define targets
 #
